@@ -3,13 +3,6 @@ cmake_minimum_required(VERSION 3.0)
 project(Thrust CXX)
 
 
-#set(warn_all '-Wall')Â
-
-# find_package(CUDA)
-# find_package(OpenMP)
-# find_package(TBB)
-
-
 function(print_flags flags)
   message("${flags}:")
   set(flags ${${flags}})
@@ -95,5 +88,29 @@ set(
 
 set(NV_LINKER_FLAGS ${GNU_LINKER_FLAGS})
 
-print_flags(MSVC_COMPILER_FLAGS)
+# print_flags(MSVC_COMPILER_FLAGS)
+
+
+find_package(CUDA)
+find_package(OpenMP)
+# find_package(TBB)
+
+# Add Compute Capability list
+set(ARCH_LIST  sm_10  sm_11  sm_12)
+list(APPEND ARCH_LIST sm_20  sm_21)
+list(APPEND ARCH_LIST sm_30  sm_32  sm_35  sm_37)
+list(APPEND ARCH_LIST sm_50  sm_52)
+
+if (CUDA_ARCH)
+  LIST(FIND ARCH_LIST ${CUDA_ARCH} index)
+  if (index EQUAL -1)
+    MESSAGE(FATAL_ERROR "Unknown Compute Capability '${CUDA_ARCH}'")
+  endif()
+endif()
+
+# Set default to sm_20
+set(CUDA_ARCH sm_20 CACHE STRING "Compute capability code generation")
+set_property(CACHE CUDA_ARCH PROPERTY STRINGS ${ARCH_LIST})
+
+#message("${ARCH}")
 
