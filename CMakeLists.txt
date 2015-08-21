@@ -112,5 +112,17 @@ endif()
 set(CUDA_ARCH sm_20 CACHE STRING "Compute capability code generation")
 set_property(CACHE CUDA_ARCH PROPERTY STRINGS ${ARCH_LIST})
 
-#message("${ARCH}")
 
+# Add a list and a variable to handle the host backend
+set(HOST_BACKEND_LIST cpp omp tbb)
+set(HOST_BACKEND cpp CACHE STRING "The host backend to target")
+set_property(CACHE HOST_BACKEND PROPERTY STRINGS ${HOST_BACKEND_LIST})
+
+
+# Add a list and a variable to handle the device backend
+set(DEVICE_BACKEND_LIST cuda omp tbb cpp)
+set(DEVICE_BACKEND cuda CACHE STRING "The device backend to target")
+set_property(CACHE DEVICE_BACKEND PROPERTY STRINGS ${DEVICE_BACKEND_LIST})
+
+
+set(CUDA_CDP False CACHE BOOL "Enable CUDA dynamic parallelism")
