@@ -121,4 +121,15 @@ add_option(CUDA_ARCH  "Compute capability code generation" STRING sm_20
 add_option(HOST_BACKEND   "The host   backend to target" STRING cpp omp tbb)
 add_option(DEVICE_BACKEND "The device backend to target" STRING cuda cpp omp tbb)
 add_option(CUDA_CDP "Enable CUDA dynamic parallelism" BOOL False)
+add_option(CXX_STD "C++ standard" STRING c++03 c++11)
+
+if (WIN32)
+  set(WINNT True)
+  set(NOT_WINNT False)
+else()
+  set(WINNT False)
+  set(NOT_WINNT True)
+endif()
+add_option(Wall "Enable all compilation warnings" BOOL ${NOT_WINNT})
+add_option(Werror "Tread warnings as errors" BOOL ${NOT_WINNT})
 
