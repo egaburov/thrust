@@ -1,5 +1,15 @@
 cmake_minimum_required(VERSION 3.0)
 
+file(READ "thrust/version.h" thrust_version_file)
+string(REGEX MATCH "THRUST_VERSION ([0-9]+)" DUMMY ${thrust_version_file})
+set(thrust_version ${CMAKE_MATCH_1})
+#message("thrust_version= ${thrust_version}")
+math(EXPR Thrust_VERSION_MAJOR "(${thrust_version} / 100000)")
+math(EXPR Thrust_VERSION_MINOR "(${thrust_version} / 100) % 1000")
+math(EXPR Thrust_VERSION_PATCH " ${thrust_version} % 100")
+
+message(STATUS "Thrust version ${Thrust_VERSION_MAJOR}.${Thrust_VERSION_MINOR}.${Thrust_VERSION_PATCH}")
+
 project(Thrust CXX)
 
 
@@ -129,6 +139,7 @@ else()
 endif()
 add_option(Wall "Enable all compilation warnings" BOOL ${NOT_WINNT})
 add_option(Werror "Tread warnings as errors" BOOL ${NOT_WINNT})
+
 
 
 find_package(CUDA)
