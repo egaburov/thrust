@@ -94,35 +94,31 @@ set(NV_LINKER_FLAGS ${GNU_LINKER_FLAGS})
 find_package(CUDA)
 find_package(OpenMP)
 # find_package(TBB)
-
-# Add Compute Capability list
-set(ARCH_LIST  sm_10  sm_11  sm_12)
-list(APPEND ARCH_LIST sm_20  sm_21)
-list(APPEND ARCH_LIST sm_30  sm_32  sm_35  sm_37)
-list(APPEND ARCH_LIST sm_50  sm_52)
-
-if (CUDA_ARCH)
-  LIST(FIND ARCH_LIST ${CUDA_ARCH} index)
-  if (index EQUAL -1)
-    MESSAGE(FATAL_ERROR "Unknown Compute Capability '${CUDA_ARCH}'")
+function(add_option OPTION_NAME DESCRIPTION TYPE)
+  if (${ARGC} EQUAL 3)
+    message(FATAL_ERROR "No option value [list] is provided")
   endif()
-endif()
+  if (${OPTION_NAME} AND "x${TYPE}" STREQUAL "xSTRING")
+    LIST(FIND ARGN ${${OPTION_NAME}} index)
+    if (index EQUAL -1)
+      message(FATAL_ERROR "Invalid value '${${OPTION_NAME}}' for '${DESCRIPTION}'")
+    endif()
+  endif()
+  set(value_list ${ARGN})
+  LIST(GET value_list  0 default_value)
+  LIST(SORT value_list)
+  set(${OPTION_NAME} ${default_value} CACHE ${TYPE} ${DESCRIPTION})
+  if ("x${TYPE}" STREQUAL "xSTRING")
+    set_property(CACHE ${OPTION_NAME} PROPERTY STRINGS ${value_list})
+  endif()
+endfunction()
 
-# Set default to sm_20
-set(CUDA_ARCH sm_20 CACHE STRING "Compute capability code generation")
-set_property(CACHE CUDA_ARCH PROPERTY STRINGS ${ARCH_LIST})
+add_option(CUDA_ARCH  "Compute capability code generation" STRING sm_20
+  sm_10 sm_11 sm_12
+  sm_20 sm_21
+  sm_30 sm_32 sm_35 sm_37
+  sm_50 sm_52)
+add_option(HOST_BACKEND   "The host   backend to target" STRING cpp omp tbb)
+add_option(DEVICE_BACKEND "The device backend to target" STRING cuda cpp omp tbb)
+add_option(CUDA_CDP "Enable CUDA dynamic parallelism" BOOL False)
 
-
-# Add a list and a variable to handle the host backend
-set(HOST_BACKEND_LIST cpp omp tbb)
-set(HOST_BACKEND cpp CACHE STRING "The host backend to target")
-set_property(CACHE HOST_BACKEND PROPERTY STRINGS ${HOST_BACKEND_LIST})
-
-
-# Add a list and a variable to handle the device backend
-set(DEVICE_BACKEND_LIST cuda omp tbb cpp)
-set(DEVICE_BACKEND cuda CACHE STRING "The device backend to target")
-set_property(CACHE DEVICE_BACKEND PROPERTY STRINGS ${DEVICE_BACKEND_LIST})
-
-
-set(CUDA_CDP False CACHE BOOL "Enable CUDA dynamic parallelism")
