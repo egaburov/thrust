@@ -10,24 +10,25 @@ project(Thrust CXX)
 # find_package(TBB)
 
 
-macro(define_compiler_flags PREFIX)
-  set(__arg_name )
+function(print_flags flags)
+  message("${flags}:")
+  set(flags ${${flags}})
   set(__is_name True)
-  foreach(arg ${ARGN})
+  foreach(arg ${flags})
     if (__is_name)
       set(__arg_name ${arg})
       set(__is_name False)
     else()
       separate_arguments(arg)
-      set(${PREFIX}_${__arg_name} ${arg})
-      #      message("${PREFIX}_${__arg_name} '${arg}'")
+      set(arg ${arg})
+      message(" | ${__arg_name} : '${arg}'")
       set(__is_name True)
     endif()
   endforeach()
-endmacro()
+endfunction()
 
-define_compiler_flags(
-  GNU_COMPILER
+set(
+  GNU_COMPILER_FLAGS
   WARN_ALL             "-Wall"
   WARNINGS_AS_ERRORS   "-Werror"
   RELEASE              "-O2"
@@ -41,9 +42,15 @@ define_compiler_flags(
   CXX03                " "
   CXX11                "-std=c++11"
   )
+set(
+  GNU_LINKER_FLAGS
+  DEBUG " "
+  RELEASE " "
+  WORKAROUNDS " "
+  )
 
-define_compiler_flags(
-  CLANG_COMPILER
+set(
+  CLANG_COMPILER_FLAGS
   WARN_ALL             "-Wall"
   WARNINGS_AS_ERRORS   "-Werror"
   RELEASE              "-O2"
@@ -57,9 +64,15 @@ define_compiler_flags(
   CXX03                " "
   CXX11                "-std=c++11"
   )
+set(
+  CLANG_LINKER_FLAGS
+  DEBUG " "
+  RELEASE " "
+  WORKAROUNDS "-stdlib=libstdc++"
+  )
 
-define_compiler_flags(
-  MSVC_COMPILER
+set(
+  MSVC_COMPILER_FLAGS
   WARN_ALL             "/Wall"
   WARNINGS_AS_ERRORS   "/Wx"
   RELEASE              "/Ox"
@@ -73,12 +86,14 @@ define_compiler_flags(
   CXX03                " "
   CXX11                "-std=c++11"
   )
+set(
+  MSVC_LINKER
+  DEBUG "/debug"
+  RELEASE  " "
+  WORKAROUND "/nologo"
+  )
 
+set(NV_LINKER_FLAGS ${GNU_LINKER_FLAGS})
 
-macro(countargs)
-  message (${ARGC})
-endmacro()
-message("'${GNU_COMPILER_CXX03}'")
-message("'${GNU_COMPILER_CXX11}'")
-countargs(${GNU_COMPILER_CXX11})
-#
+print_flags(MSVC_COMPILER_FLAGS)
+
