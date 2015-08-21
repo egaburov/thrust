@@ -91,9 +91,6 @@ set(NV_LINKER_FLAGS ${GNU_LINKER_FLAGS})
 # print_flags(MSVC_COMPILER_FLAGS)
 
 
-find_package(CUDA)
-find_package(OpenMP)
-# find_package(TBB)
 function(add_option OPTION_NAME DESCRIPTION TYPE)
   if (${ARGC} EQUAL 3)
     message(FATAL_ERROR "No option value [list] is provided")
@@ -133,3 +130,6 @@ endif()
 add_option(Wall "Enable all compilation warnings" BOOL ${NOT_WINNT})
 add_option(Werror "Tread warnings as errors" BOOL ${NOT_WINNT})
 
+
+find_package(CUDA)
+find_package(OpenMP)
