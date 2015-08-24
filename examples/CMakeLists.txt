@@ -11,7 +11,7 @@ message(STATUS "Found ${index} examples")
 foreach (src ${SOURCES})
   get_filename_component(target ${src} NAME_WE)
   set(target ${target})
-  cuda_add_executable(${target} ${src})
+  thrust_add_executable(${target} ${src})
   install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}/examples")
 endforeach()
 

@@ -266,6 +266,17 @@ macro(set_linker_flags LINKER_FLAGS_)
   LIST(APPEND ${LINKER_FLAGS_} ${flags_})
 endmacro()
 
+macro(thrust_add_executable TARGET)
+  if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin" AND NOT "${DEVICE_BACKEND}" STREQUAL "CUDA")
+    set_source_files_properties(${ARGN} PROPERTIES LANGUAGE CXX)
+    add_executable(${TARGET} ${ARGN})
+    set_target_properties(${TARGET} PROPERTIES LINKER_LANGUAGE CXX)
+    set_target_properties(${TARGET} PROPERTIES COMPILE_FLAGS "-x c++")
+  else()
+    cuda_add_executable(${TARGET} ${ARGN})
+  endif()
+endmacro()
+
 # Find backends
 
 find_package(CUDA)
@@ -302,7 +313,10 @@ if (${CUDA_CDP})
 endif()
 
 
+
 # Add targets
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+cuda_include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(examples)
 add_subdirectory(testing)

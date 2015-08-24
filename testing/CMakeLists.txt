@@ -14,6 +14,6 @@ add_subdirectory(backend)
 
 #message("src= ${SOURCES}")
 set(target tester)
-cuda_add_executable(${target} ${SOURCES})
+thrust_add_executable(${target} ${SOURCES})
 install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}")
 
