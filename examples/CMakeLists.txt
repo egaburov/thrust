@@ -1,9 +1,12 @@
-message(STATUS "Adding \"examples\"")
+# message(STATUS "Adding \"examples\"")
 
 #aux_source_directory("testing" sources)
 FILE(GLOB SOURCES_CU  *.cu)
 FILE(GLOB SOURCES_CPP *.cpp)
 set(SOURCES ${SOURCES_CU})
+
+list(LENGTH SOURCES index)
+message(STATUS "Found ${index} examples")
 
 foreach (src ${SOURCES})
   get_filename_component(target ${src} NAME_WE)

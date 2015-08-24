@@ -1,11 +1,11 @@
-message(STATUS "Adding \"testing\"")
+# message(STATUS "Adding \"testing\"")
 
 FILE(GLOB SOURCES_CU  *.cu)
 FILE(GLOB SOURCES_CPP *.cpp)
 set(SOURCES ${SOURCES_CU} ${SOURCES_CPP})
 
 list(LENGTH SOURCES index)
-message(STATUS "Building ${index} tests in testing")
+message(STATUS "Found ${index} tests in testing")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 cuda_include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
