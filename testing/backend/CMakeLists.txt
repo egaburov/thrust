@@ -12,7 +12,7 @@ set(SOURCES_backend ${SOURCES_backend_CU} ${SOURCES_backend_CPP})
 list(LENGTH SOURCES_LOC size_LOC)
 list(LENGTH SOURCES_backend size_backend)
 math(EXPR size "${size_LOC} + ${size_backend}")
-message(STATUS "Building ${size} tests in backend")
+message(STATUS "Found ${size} tests in backend")
 
 set(SOURCES ${SOURCES} ${SOURCES_LOC} ${SOURCES_backend} PARENT_SCOPE)
 
