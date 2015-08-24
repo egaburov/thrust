@@ -9,6 +9,7 @@
 // for printing
 #include <thrust/copy.h>
 #include <ostream>
+#include <iostream>  
 
 // this example illustrates how to make repeated access to a range of values
 // examples:

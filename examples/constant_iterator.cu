@@ -6,6 +6,7 @@
 // for printing
 #include <thrust/copy.h> 
 #include <iterator>
+#include <iostream>
 
 int main(void)
 {
