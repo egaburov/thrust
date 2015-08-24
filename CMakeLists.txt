@@ -51,6 +51,10 @@ set(
   DEBUG " "
   RELEASE " "
   WORKAROUNDS " "
+  CPP " "
+  OMP "-fopenmp"
+  TBB " "
+  CUDA " "
   )
 
 set(
@@ -73,6 +77,10 @@ set(
   DEBUG " "
   RELEASE " "
   WORKAROUNDS "-stdlib=libstdc++"
+  CPP " "
+  OMP "-fopenmp"
+  TBB " "
+  CUDA " "
   )
 
 set(
@@ -95,6 +103,10 @@ set(
   DEBUG "/debug"
   RELEASE  " "
   WORKAROUND "/nologo"
+  CPP " "
+  OMP "/openmp"
+  TBB " "
+  CUDA " "
   )
 
 set(NV_LINKER_FLAGS ${GNU_LINKER_FLAGS})
