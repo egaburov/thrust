@@ -30,6 +30,7 @@ function(print_flags flags)
   endforeach()
 endfunction()
 
+
 set(
   GNU_COMPILER_FLAGS
   WARN_ALL             "-Wall"
@@ -42,8 +43,8 @@ set(
   TBB                  " "
   CUDA                 " "
   WORKAROUNDS          " "
-  CXX03                " "
-  CXX11                "-std=c++11"
+  C++03                " "
+  C++11                "-std=c++11"
   )
 set(
   GNU_LINKER_FLAGS
@@ -64,8 +65,8 @@ set(
   TBB                  " "
   CUDA                 " "
   WORKAROUNDS          " "
-  CXX03                " "
-  CXX11                "-std=c++11"
+  C++03                " "
+  C++11                "-std=c++11"
   )
 set(
   CLANG_LINKER_FLAGS
@@ -86,8 +87,8 @@ set(
   TBB                  " "
   CUDA                 " "
   WORKAROUNDS          "/DNOMINMAX /wd4503"
-  CXX03                " "
-  CXX11                "-std=c++11"
+  C++03                " "
+  C++11                "-std=c++11"
   )
 set(
   MSVC_LINKER
@@ -125,10 +126,11 @@ add_option(CUDA_ARCH  "Compute capability code generation" STRING sm_20
   sm_20 sm_21
   sm_30 sm_32 sm_35 sm_37
   sm_50 sm_52)
-add_option(HOST_BACKEND   "The host   backend to target" STRING cpp omp tbb)
-add_option(DEVICE_BACKEND "The device backend to target" STRING cuda cpp omp tbb)
+add_option(HOST_BACKEND   "The host   backend to target" STRING CPP OMP TBB)
+add_option(DEVICE_BACKEND "The device backend to target" STRING CUDA CPP OMP TBB)
 add_option(CUDA_CDP "Enable CUDA dynamic parallelism" BOOL False)
-add_option(CXX_STD "C++ standard" STRING c++03 c++11)
+add_option(CXX_STD "C++ standard" STRING C++03 C++11)
+add_option(THRUST_MODE "Release versus debug mode" STRING RELEASE DEBUG)
 
 if (WIN32)
   set(WINNT True)
@@ -137,10 +139,15 @@ else()
   set(WINNT False)
   set(NOT_WINNT True)
 endif()
-add_option(Wall "Enable all compilation warnings" BOOL ${NOT_WINNT})
-add_option(Werror "Tread warnings as errors" BOOL ${NOT_WINNT})
+add_option(WARN_ALL "Enable all compilation warnings" BOOL ${NOT_WINNT})
+add_option(WARN_ERROR "Treat warnings as errors" BOOL ${NOT_WINNT})
+
+set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build Type")
 
 
 
 find_package(CUDA)
 find_package(OpenMP)
+
+#add_subdirectory(testing)
+add_subdirectory(examples)
