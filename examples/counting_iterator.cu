@@ -5,6 +5,7 @@
 
 // for printing
 #include <iterator>
+#include <iostream>
 
 int main(void)
 {

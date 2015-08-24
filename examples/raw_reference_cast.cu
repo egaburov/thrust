@@ -4,6 +4,8 @@
 #include <thrust/sequence.h>
 #include <thrust/fill.h>
 
+#include <iostream>
+
 // This example illustrates how to use the raw_reference_cast to convert
 // system-specific reference wrappers into native references.
 //

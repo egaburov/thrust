@@ -19,6 +19,5 @@
 
 #pragma once
 
-#include <iostream>
 #include <thrust/detail/config/config.h>
 

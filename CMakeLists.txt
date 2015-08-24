@@ -76,7 +76,7 @@ set(
   CLANG_LINKER_FLAGS
   DEBUG " "
   RELEASE " "
-  WORKAROUNDS "-stdlib=libstdc++"
+  WORKAROUNDS " " #-stdlib=libstdc++"
   CPP " "
   OMP "-fopenmp"
   TBB " "
