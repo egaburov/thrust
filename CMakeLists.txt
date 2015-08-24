@@ -302,5 +302,5 @@ endif()
 
 # Add targets
 
-#add_subdirectory(testing)
 add_subdirectory(examples)
+add_subdirectory(testing)
