@@ -267,7 +267,7 @@ macro(set_linker_flags LINKER_FLAGS_)
 endmacro()
 
 macro(thrust_add_executable TARGET)
-  if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin" AND NOT "${DEVICE_BACKEND}" STREQUAL "CUDA")
+  if (NOT "${DEVICE_BACKEND}" STREQUAL "CUDA") # AND "${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
     set_source_files_properties(${ARGN} PROPERTIES LANGUAGE CXX)
     add_executable(${TARGET} ${ARGN})
     set_target_properties(${TARGET} PROPERTIES LINKER_LANGUAGE CXX)
