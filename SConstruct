@@ -303,12 +303,15 @@ def cc_compiler_flags(CXX, mode, platform, host_backend, device_backend, warn_al
 
   # debug/release
   result.extend(flags[mode])
+  print mode ,flags[mode], result
 
   # enable host_backend code generation
   result.extend(flags[host_backend])
+  print host_backend ,flags[host_backend], result
 
   # enable device_backend code generation
   result.extend(flags[device_backend])
+  print device_backend ,flags[device_backend], result
 
   # Wall
   if warn_all:
@@ -336,6 +339,7 @@ def nv_compiler_flags(mode, device_backend, arch, cdp):
     # the weird -gencode flag is formatted like this:
     # -gencode=arch=compute_10,code=\"sm_20,compute_20\"
     result.append('-gencode=arch={0},\\"code={1},{2}\\"'.format(virtual_arch, machine_arch, virtual_arch))
+  print result
 
   if mode == 'debug':
     # turn on debug mode

@@ -79,6 +79,8 @@ macro(set_nv_compiler_flags NV_COMPILER_FLAGS_)
   LIST(APPEND ${NV_COMPILER_FLAGS_} "-gencode=arch=${VIRTUAL_ARCH_},\\\\\"code=${MACHINE_ARCH_},${VIRTUAL_ARCH_}\\\\\"")
 
   if ("${THRUST_MODE}" STREQUAL "DEBUG")
+    # turn on debug mode
+    # XXX make this work when we've debugged nvcc -G
 #    LIST(APPEND ${NV_COMPILER_FLAGS_} "-G")    
   endif()
 
@@ -90,16 +92,12 @@ macro(set_nv_compiler_flags NV_COMPILER_FLAGS_)
     LIST(APPEND ${NV_COMPILER_FLAGS_} "-rdc=true")
   endif()
 
-#  if ("${DEVICE_BACKEND}" STREQUAL "CUDA" AND APPLE)
-#  if (APPLE)
-    EXEC_PROGRAM(uname ARGS -v  OUTPUT_VARIABLE DARWIN_VERSION)
-    STRING(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
-    message("version= ${DARWIN_VERSION}")
-    message("system= ${CMAKE_SYSTEM_NAME}")
-    message("version= ${CMAKE_SYSTEM_VERSION}")
-#  endif()
-
-
+  # Untested on OSX 10.8.*
+  if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+    if ("${CMAKE_SYSTEM_VERSION}" STREQUAL "10.8.")
+      LIST(APPEND ${NV_COMPILER_FLAGS_} "-ccbin ${CMAKE_CXX_COMPILER}")
+    endif()
+  endif()
 endmacro()
 
 set_thrust_flags(THRUST_FLAGS)
