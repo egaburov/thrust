@@ -11,7 +11,7 @@ math(EXPR Thrust_VERSION_PATCH " ${thrust_version} % 100")
 message(STATUS "Thrust version ${Thrust_VERSION_MAJOR}.${Thrust_VERSION_MINOR}.${Thrust_VERSION_PATCH}")
 
 project(Thrust CXX)
-
+set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
 
 function(print_flags flags)
   message("${flags}:")
