@@ -21,7 +21,6 @@ cuda_include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}
 
 add_subdirectory(backend)
 
-include(CTest)
 
 set(targets "")
 foreach(src ${SOURCES})
