@@ -159,9 +159,10 @@ add_option(WARN_ALL "Enable all compilation warnings" BOOL ${NOT_WINNT})
 add_option(WARN_ERROR "Treat warnings as errors" BOOL ${NOT_WINNT})
 
 IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
-      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-      FORCE)
+  # possible cmake bug (?) : RelWithDebInfo passes -DNDEBUG
+  #  SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
+  #    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+  #    FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
 # Helpers
