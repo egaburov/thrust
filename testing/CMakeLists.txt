@@ -11,8 +11,6 @@ endif()
 
 list(REMOVE_AT SOURCES ${index} SOURCES)
 
-set(SOURCES pair.cu)
-
 list(LENGTH SOURCES index)
 message(STATUS "Found ${index} tests in testing")
 
@@ -21,13 +19,15 @@ cuda_include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}
 
 add_subdirectory(backend)
 
+cuda_add_library(test_driver ${DRIVER} STATIC)
 
 set(targets "")
 foreach(src ${SOURCES})
   get_filename_component(exec_name ${src} NAME_WE)
   set(target test.${exec_name})
-  set(src_files ${src} ${DRIVER})
-  thrust_add_executable(${target} ${src_files})
+  #  set(src_files ${src} ${DRIVER})
+  thrust_add_executable(${target} ${src})
+  target_link_libraries(${target} test_driver)
   #  install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}" OPTIONAL)
   add_test(NAME ${exec_name} COMMAND ${target})
   list(APPEND targets ${target})
