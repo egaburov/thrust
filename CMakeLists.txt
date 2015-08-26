@@ -13,6 +13,9 @@ message(STATUS "Thrust version ${Thrust_VERSION_MAJOR}.${Thrust_VERSION_MINOR}.$
 project(Thrust CXX)
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
 
+include(CTest)
+enable_testing()
+
 function(print_flags flags)
   message("${flags}:")
   set(flags ${${flags}})
