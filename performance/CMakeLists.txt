@@ -33,13 +33,14 @@ foreach(src ${SOURCES_TEST})
     OUTPUT ${dst}
     DEPENDS ${src}
     COMMAND "${PYTHON_EXECUTABLE}" 
-    ARGS ${compile_source}$ "" ${src} ${dst}$ 
+    ARGS ${compile_source}$ "" ${src} "" ${dst}$  "" ${dst}
     COMMENT "Generate perforfmance test \"${dst}\" from \"${src}\" "
     )
   set(cuda_src ${dst})
   thrust_add_executable(${target} ${cuda_src})
-  set_target_properties(${target} PROPERTIES OUTPUT_NAME ${exec_name})
-  install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}/performance" OPTIONAL)
+  # set_target_properties(${target} PROPERTIES OUTPUT_NAME ${exec_name})
+  # install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}/performance" OPTIONAL)
+  install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}" OPTIONAL)
   list(APPEND targets ${target})
 endforeach()
 
