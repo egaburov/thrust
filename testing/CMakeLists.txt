@@ -19,7 +19,7 @@ cuda_include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}
 
 add_subdirectory(backend)
 
-cuda_add_library(test_driver ${DRIVER} STATIC)
+cuda_add_library(test_driver ${DRIVER} STATIC EXCLUDE_FROM_ALL)
 
 set(targets "")
 foreach(src ${SOURCES})
@@ -28,9 +28,12 @@ foreach(src ${SOURCES})
   #  set(src_files ${src} ${DRIVER})
   thrust_add_executable(${target} ${src})
   target_link_libraries(${target} test_driver)
-  #  install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}" OPTIONAL)
+  set_target_properties(${target} PROPERTIES EXCLUDE_FROM_ALL TRUE)
   add_test(NAME ${exec_name} COMMAND ${target})
   list(APPEND targets ${target})
 endforeach()
 
 add_custom_target(tests DEPENDS ${targets})
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+add_dependencies(check tests)
+
