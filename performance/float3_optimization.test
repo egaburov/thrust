@@ -2,6 +2,12 @@ PREAMBLE = \
     """
     #include <thrust/transform.h>
     #include <thrust/iterator/zip_iterator.h>
+#ifndef __NVCC__  // If compiling with NVCC don't redefine float3
+  struct float3 {float x, y,z;};
+#endif
+#ifndef __CUDACC__ // If compiled for device, don't redefine make_float3
+  inline static float3 make_float3(float x, float y, float z) {float3 res; res.x=x;res.y=y;res.z=z; return res;}
+#endif
     
     #include <cmath>
 

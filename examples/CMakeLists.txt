@@ -8,10 +8,14 @@ set(SOURCES ${SOURCES_CU})
 list(LENGTH SOURCES index)
 message(STATUS "Found ${index} examples")
 
+set(target "")
 foreach (src ${SOURCES})
   get_filename_component(target ${src} NAME_WE)
   set(target ${target})
   thrust_add_executable(${target} ${src})
   install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}/examples" OPTIONAL)
+  list(APPEND targets ${target})
 endforeach()
+
+add_custom_target(examples DEPENDS ${targets})
 

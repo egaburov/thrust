@@ -277,6 +277,14 @@ macro(thrust_add_executable TARGET)
   endif()
 endmacro()
 
+#macro(thrust_include_directories TARGET)
+#  if (NOT "${DEVICE_BACKEND}" STREQUAL "CUDA") # AND "${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+#    target_include_directories(${TARGET} PRIVATE ${ARGN})
+#  else()
+#    cuda_include_directories(${ARGN})
+#  endif()
+#endmacro()
+
 # Find backends
 
 find_package(CUDA)
@@ -316,8 +324,8 @@ endif()
 
 # Add targets
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-cuda_include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR})
+cuda_include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(examples)
 add_subdirectory(testing)
 add_subdirectory(performance)
