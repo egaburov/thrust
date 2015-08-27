@@ -335,8 +335,8 @@ include_directories(${CMAKE_SOURCE_DIR})
 cuda_include_directories(${CMAKE_SOURCE_DIR})
 
 # thrust target
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/thrust/ DESTINATION thrust COMPONENT headers)
-install(FILES ${CMAKE_SOURCE_DIR}/CHANGELOG DESTINATION thrust COMPONENT headers)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/thrust/ DESTINATION thrust COMPONENT thrust)
+install(FILES ${CMAKE_SOURCE_DIR}/CHANGELOG DESTINATION thrust COMPONENT thrust)
 add_custom_target(install-thrust
   COMMAND
       "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=thrust
@@ -350,10 +350,12 @@ set(CPACK_PACKAGE_VERSION "${Thrust_VERSION_MAJOR}.${Thrust_VERSION_MINOR}.${Thr
 set(CPACK_PACKAGE_VERSION_MAJOR "${Thrust_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${Thrust_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${Thrust_VERSION_PATCH}")
-set(CPACK_COMPONENTS_ALL headers examples)
+set(CPACK_COMPONENTS_ALL thrust examples)
+set(CPACK_ZIP_USE_DISPLAY_NAME_IN_FILENAME ON)
 set(CPACK_PACKAGE_FILE_NAME "Thrust-${CPACK_PACKAGE_VERSION}")
 include(CPack)
-cpack_add_component(examples DISPLAY_NAME "XXX" ARCHIVE_FILE "YYY.zip")
+cpack_add_component(examples DISPLAY_NAME "examples" ARCHIVE_FILE "xxx")
+cpack_add_component(thrust DISPLAY_NAME "headers")
 
 
 add_subdirectory(examples)
