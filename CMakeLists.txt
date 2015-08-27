@@ -329,10 +329,11 @@ if (${CUDA_CDP})
   link_libraries(${CUDADEVRT_LIBRARY})
 endif()
 
-# Add targets
 
 include_directories(${CMAKE_SOURCE_DIR})
 cuda_include_directories(${CMAKE_SOURCE_DIR})
+
+# Add targets
 
 # thrust target
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/thrust/ DESTINATION thrust COMPONENT thrust)
@@ -343,7 +344,13 @@ add_custom_target(install-thrust
       -P "${CMAKE_BINARY_DIR}/cmake_install.cmake"
 )
 
-# make zip acrhive
+# add examples, testing and performance testing targets
+add_subdirectory(examples)
+add_subdirectory(testing)
+add_subdirectory(performance)
+
+### make zip acrhive
+
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 set(CPACK_GENERATOR "ZIP")
 set(CPACK_PACKAGE_VERSION "${Thrust_VERSION_MAJOR}.${Thrust_VERSION_MINOR}.${Thrust_VERSION_PATCH}")
@@ -354,10 +361,5 @@ set(CPACK_COMPONENTS_ALL thrust examples)
 set(CPACK_ZIP_USE_DISPLAY_NAME_IN_FILENAME ON)
 set(CPACK_PACKAGE_FILE_NAME "Thrust-${CPACK_PACKAGE_VERSION}")
 include(CPack)
-cpack_add_component(examples DISPLAY_NAME "examples" ARCHIVE_FILE "xxx")
 cpack_add_component(thrust DISPLAY_NAME "headers")
-
-
-add_subdirectory(examples)
-add_subdirectory(testing)
-add_subdirectory(performance)
+cpack_add_component(examples DISPLAY_NAME "examples")
