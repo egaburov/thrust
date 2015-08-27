@@ -14,14 +14,16 @@ foreach (src ${SOURCES})
   set(target example-${exec_name})
   thrust_add_executable(${target} ${src})
   set_target_properties(${target} PROPERTIES OUTPUT_NAME ${exec_name})
-  install(TARGETS ${target} DESTINATION "examples/${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}" COMPONENT examples)
+  install(TARGETS ${target} DESTINATION "examples/${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}" OPTIONAL COMPONENT examples-bin)
   list(APPEND targets ${target})
 endforeach()
 
-add_custom_target(examples DEPENDS ${targets})
-add_custom_target(install-examples
+add_custom_target(examples-bin DEPENDS ${targets})
+add_custom_target(install-examples-bin
   COMMAND 
-      "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=examples
+      "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=examples-bin
       -P "${CMAKE_BINARY_DIR}/cmake_install.cmake"
 )
+
+install(FILES ${SOURCES} DESTINATION "examples" COMPONENT examples)
 

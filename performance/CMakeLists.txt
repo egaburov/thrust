@@ -25,6 +25,7 @@ FILE(WRITE ${compile_source}
   "compile_test(str(sys.argv[1]),str(sys.argv[2]))\n"
   )
 set(targets "")
+set(perf_sources "")
 foreach(src ${SOURCES_TEST})
   get_filename_component(exec_name ${src} NAME_WE)
   set(target perf-${exec_name})
@@ -39,13 +40,17 @@ foreach(src ${SOURCES_TEST})
   set(cuda_src ${dst})
   thrust_add_executable(${target} ${cuda_src})
   set_target_properties(${target} PROPERTIES OUTPUT_NAME ${exec_name})
-  set_target_properties(${target} PROPERTIES EXCLUDE_FROM_ALL TRUE)
+  install(TARGETS ${target} DESTINATION "performance/${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}" OPTIONAL COMPONENT performance-bin)
   list(APPEND targets ${target})
+  list(APPEND perf_sources ${cuda_src})
 endforeach()
 
-add_custom_target(performance DEPENDS ${targets})
-add_custom_target(install-performance
+add_custom_target(performance-bin DEPENDS ${targets})
+add_custom_target(install-performance-bin
   COMMAND 
-      "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=performance
+      "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=performance-bin
       -P "${CMAKE_BINARY_DIR}/cmake_install.cmake"
 )
+
+# install(FILES ${perf_sources} DESTINATION "performance" COMPONENT performance)
+
