@@ -34,7 +34,7 @@ foreach(src ${SOURCES})
   list(APPEND targets ${target})
 endforeach()
 
-add_custom_target(tests DEPENDS ${targets})
+add_custom_target(testing DEPENDS ${targets})
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-add_dependencies(check tests)
+add_dependencies(check testing)
 
