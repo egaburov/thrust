@@ -27,7 +27,7 @@ FILE(WRITE ${compile_source}
 set(targets "")
 foreach(src ${SOURCES_TEST})
   get_filename_component(exec_name ${src} NAME_WE)
-  set(target perf.${exec_name})
+  set(target perf-${exec_name})
   set(dst ${CMAKE_CURRENT_BINARY_DIR}/${exec_name}.cu)
   add_custom_command(
     OUTPUT ${dst}
@@ -38,11 +38,14 @@ foreach(src ${SOURCES_TEST})
     )
   set(cuda_src ${dst})
   thrust_add_executable(${target} ${cuda_src})
-  # set_target_properties(${target} PROPERTIES EXCLUDE_FROM_ALL TRUE)
-  # set_target_properties(${target} PROPERTIES OUTPUT_NAME ${exec_name})
-  # install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}/performance" OPTIONAL)
-  install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}" OPTIONAL)
+  set_target_properties(${target} PROPERTIES OUTPUT_NAME ${exec_name})
+  install(TARGETS ${target} DESTINATION "${HOST_BACKEND}_host_${DEVICE_BACKEND}_device_${THRUST_MODE}/performance" OPTIONAL COMPONENT performance)
   list(APPEND targets ${target})
 endforeach()
 
 add_custom_target(performance DEPENDS ${targets})
+add_custom_target(install-performance
+  COMMAND 
+      "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=performance
+      -P "${CMAKE_BINARY_DIR}/cmake_install.cmake"
+)
