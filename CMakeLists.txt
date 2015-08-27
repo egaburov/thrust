@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
+project(Thrust CXX)
+
+set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
 
 file(READ "thrust/version.h" thrust_version_file)
 string(REGEX MATCH "THRUST_VERSION ([0-9]+)" DUMMY ${thrust_version_file})
@@ -10,8 +13,6 @@ math(EXPR Thrust_VERSION_PATCH " ${thrust_version} % 100")
 
 message(STATUS "Thrust version ${Thrust_VERSION_MAJOR}.${Thrust_VERSION_MINOR}.${Thrust_VERSION_PATCH}")
 
-project(Thrust CXX)
-set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
 
 include(CTest)
 enable_testing()
@@ -328,14 +329,12 @@ if (${CUDA_CDP})
   link_libraries(${CUDADEVRT_LIBRARY})
 endif()
 
-
-
 # Add targets
 
 include_directories(${CMAKE_SOURCE_DIR})
 cuda_include_directories(${CMAKE_SOURCE_DIR})
 
-# Thrust target
+# thrust target
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/thrust/ DESTINATION thrust COMPONENT thrust)
 install(FILES ${CMAKE_SOURCE_DIR}/CHANGELOG DESTINATION thrust COMPONENT thrust)
 add_custom_target(install-thrust
@@ -343,6 +342,19 @@ add_custom_target(install-thrust
       "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=thrust
       -P "${CMAKE_BINARY_DIR}/cmake_install.cmake"
 )
+
+# make zip acrhive
+set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
+set(CPACK_GENERATOR "ZIP")
+set(CPACK_PACKAGE_NAME "Thrust")
+set(CPACK_PACKAGE_VENDOR "NVIDIA")
+set(CPACK_PACKAGE_VERSION "${Thrust_VERSION_MAJOR}.${Thrust_VERSION_MINOR}.${Thrust_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${Thrust_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${Thrust_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${Thrust_VERSION_PATCH}")
+set(CPACK_COMPONENTS_ALL thrust examples)
+include(CPack)
+
 
 add_subdirectory(examples)
 add_subdirectory(testing)
