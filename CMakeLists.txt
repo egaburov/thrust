@@ -334,6 +334,16 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR})
 cuda_include_directories(${CMAKE_SOURCE_DIR})
+
+# Thrust target
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/thrust/ DESTINATION thrust COMPONENT thrust)
+install(FILES ${CMAKE_SOURCE_DIR}/CHANGELOG DESTINATION thrust COMPONENT thrust)
+add_custom_target(install-thrust
+  COMMAND
+      "${CMAKE_COMMAND}" -DCMAKE_INSTALL_COMPONENT=thrust
+      -P "${CMAKE_BINARY_DIR}/cmake_install.cmake"
+)
+
 add_subdirectory(examples)
 add_subdirectory(testing)
 add_subdirectory(performance)
