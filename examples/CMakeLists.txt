@@ -18,6 +18,10 @@ foreach (src ${SOURCES})
   list(APPEND targets ${target})
 endforeach()
 
+add_subdirectory(cuda)
+add_subdirectory(omp)
+add_subdirectory(cpp_integration)
+
 add_custom_target(examples-bin DEPENDS ${targets})
 add_custom_target(install-examples-bin
   COMMAND 
