@@ -1,0 +1,65 @@
+set(DRIVER "${CMAKE_CURRENT_SOURCE_DIR}/testframework.cpp")
+string(TOLOWER ${DEVICE_BACKEND} backend)
+add_subdirectory(backend/${backend})
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+cuda_include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+
+cuda_add_library(test_driver ${DRIVER} STATIC EXCLUDE_FROM_ALL)
+
+function(get_subdir_list result curdir)
+    FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+    set(dirlist "")
+    foreach(child ${children})
+        if (IS_DIRECTORY ${curdir}/${child})
+            list(APPEND dirlist ${child})
+        endif()
+    endforeach()
+    set(${result} ${dirlist} PARENT_SCOPE)
+endfunction()
+
+function (get_leaf leaf full_path)
+    string(REPLACE "/" ";" p2list "${full_path}")
+    list(REVERSE p2list)
+    list(GET p2list 0 leaf_name)
+    set(${leaf} ${leaf_name} PARENT_SCOPE)
+endfunction()
+
+
+function(new_test test new_targets)
+    set(test_path ${CMAKE_CURRENT_SOURCE_DIR}/${test})
+    FILE(GLOB_RECURSE sources ${test_path}/*.cu ${test_path}/*.cpp)
+    set(local_targets "")
+    set(leaf_name ${test})
+    foreach(src ${sources})
+        get_filename_component(exec_name ${src} NAME_WE)
+        get_filename_component(full_path ${src} PATH)
+        set(target "${leaf_name}.${exec_name}")
+        thrust_add_executable(test.${target} ${src})
+        target_link_libraries(test.${target} test_driver)
+        set_target_properties(test.${target} PROPERTIES EXCLUDA_FROM_ALL TRUE)
+        add_test(NAME test.${target} COMMAND test.${target})
+        add_custom_target(check.${target} COMMAND ${CMAKE_CTEST_COMMAND} -R test.${target})
+        add_dependencies(check.${target} test.${target})
+        list(APPEND local_targets test.${target})
+    endforeach()
+    add_custom_target(test.${leaf_name} DEPENDS ${local_targets})
+    add_custom_target(check.${leaf_name} COMMAND ${CMAKE_CTEST_COMMAND} -R test.${leaf_name})
+    add_dependencies(check.${leaf_name} test.${leaf_name})
+    set(${new_targets} ${local_targets} ${ARGN} PARENT_SCOPE)
+endfunction()
+
+get_subdir_list(tests ${CMAKE_CURRENT_SOURCE_DIR})
+list(REMOVE_ITEM tests "backend" "unittest")
+
+set(targets "")
+foreach(test ${tests})
+    new_test(${test} targets ${targets})
+endforeach()
+
+add_custom_target(tests DEPENDS ${targets})
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+add_dependencies(check tests)
+
+
+

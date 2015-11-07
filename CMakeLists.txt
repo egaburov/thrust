@@ -346,7 +346,8 @@ add_custom_target(install-thrust
 
 # add examples, testing and performance testing targets
 add_subdirectory(examples)
-add_subdirectory(testing)
+#add_subdirectory(testing)
+add_subdirectory(tests)
 add_subdirectory(performance)
 
 ### make zip acrhive
