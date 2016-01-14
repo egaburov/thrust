@@ -1,8 +1,8 @@
 #include <thrust/detail/raw_reference_cast.h>
-
 #include <thrust/device_vector.h>
 #include <thrust/sequence.h>
 #include <thrust/fill.h>
+#include <iostream>
 
 #include <iostream>
 
