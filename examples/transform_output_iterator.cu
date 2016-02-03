@@ -43,8 +43,11 @@ template <typename OutputIterator, typename UnaryFunction>
 class transform_output_iterator
     : public thrust::iterator_adaptor<
           transform_output_iterator<OutputIterator, UnaryFunction>,
-          OutputIterator, thrust::use_default, thrust::use_default,
-          thrust::use_default, Proxy<const OutputIterator, const UnaryFunction>>
+          OutputIterator, 
+          thrust::use_default, 
+          thrust::use_default,
+          thrust::use_default, 
+          Proxy<const OutputIterator, const UnaryFunction>>
 {
   UnaryFunction fun;
 
@@ -52,11 +55,15 @@ public:
   friend class thrust::iterator_core_access;
 
   // shorthand for the name of the iterator_adaptor we're deriving from
-  typedef thrust::iterator_adaptor<
-      transform_output_iterator<OutputIterator, UnaryFunction>, OutputIterator,
-      thrust::use_default, thrust::use_default, thrust::use_default,
+  typedef 
+    thrust::iterator_adaptor<
+      transform_output_iterator<OutputIterator, UnaryFunction>, 
+      OutputIterator,
+      thrust::use_default, 
+      thrust::use_default, 
+      thrust::use_default,
       Proxy<const OutputIterator, const UnaryFunction>>
-      super_t;
+    super_t;
 
   __host__ __device__ transform_output_iterator(OutputIterator out,
                                                 UnaryFunction fun)
