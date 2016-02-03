@@ -11,90 +11,82 @@
 #include <cstdint>
 
 #define PRINTER(name) print(#name, (name))
-template <template <typename...> class V, typename T, typename ...Args>
-void print(const char* name, const V<T,Args...> & v)
+template <template <typename...> class V, typename T, typename... Args>
+void print(const char *name, const V<T, Args...> &v)
 {
-    std::cout << name << ":\t";
-    thrust::copy(v.begin(), v.end(), std::ostream_iterator<T>(std::cout, "\t"));
-    std::cout << std::endl;
+  std::cout << name << ":\t";
+  thrust::copy(v.begin(), v.end(), std::ostream_iterator<T>(std::cout, "\t"));
+  std::cout << std::endl;
 }
 
-
-template <typename OutputIterator, typename UnaryFunction>
-class Proxy
+template <typename OutputIterator, typename UnaryFunction> class Proxy
 {
-    UnaryFunction& fun;
-    OutputIterator& out;
+  UnaryFunction &fun;
+  OutputIterator &out;
 
 public:
-    __host__ __device__
-    Proxy(UnaryFunction& fun, OutputIterator& out) : fun(fun), out(out) {}
+  __host__ __device__ Proxy(UnaryFunction &fun, OutputIterator &out)
+      : fun(fun), out(out)
+  {
+  }
 
-    template <typename T>
-    __host__ __device__
-    Proxy operator=(const T& x) const
-    {
-        *out = fun(x);
-        return *this;
-    }
+  template <typename T> __host__ __device__ Proxy operator=(const T &x) const
+  {
+    *out = fun(x);
+    return *this;
+  }
 };
-
 
 // This iterator is a wrapper around another OutputIterator which
 // applies a UnaryFunction before writing to the OutputIterator.
 template <typename OutputIterator, typename UnaryFunction>
-class transform_output_iterator : public thrust::iterator_adaptor<
-                                    transform_output_iterator<OutputIterator, UnaryFunction>
-                                                                      , OutputIterator
-                                      , thrust::use_default
-                                      , thrust::use_default
-                                      , thrust::use_default
-                                                                      , Proxy<const OutputIterator, const UnaryFunction> >
+class transform_output_iterator
+    : public thrust::iterator_adaptor<
+          transform_output_iterator<OutputIterator, UnaryFunction>,
+          OutputIterator, thrust::use_default, thrust::use_default,
+          thrust::use_default, Proxy<const OutputIterator, const UnaryFunction>>
 {
-    UnaryFunction fun;
+  UnaryFunction fun;
 
 public:
+  friend class thrust::iterator_core_access;
 
-    friend class thrust::iterator_core_access;
+  // shorthand for the name of the iterator_adaptor we're deriving from
+  typedef thrust::iterator_adaptor<
+      transform_output_iterator<OutputIterator, UnaryFunction>, OutputIterator,
+      thrust::use_default, thrust::use_default, thrust::use_default,
+      Proxy<const OutputIterator, const UnaryFunction>>
+      super_t;
 
-    // shorthand for the name of the iterator_adaptor we're deriving from
-    typedef thrust::iterator_adaptor<
-      transform_output_iterator<OutputIterator, UnaryFunction>,
-      OutputIterator, thrust::use_default, thrust::use_default, thrust::use_default, Proxy<const OutputIterator, const UnaryFunction>
-    > super_t;
-
-    __host__ __device__
-    transform_output_iterator(OutputIterator out, UnaryFunction fun) : super_t(out), fun(fun)
-    {
-    }
-
+  __host__ __device__ transform_output_iterator(OutputIterator out,
+                                                UnaryFunction fun)
+      : super_t(out), fun(fun)
+  {
+  }
 
 private:
-    __host__ __device__
-    typename super_t::reference dereference() const
-    {
-        return Proxy<const OutputIterator, const UnaryFunction>(fun, this->base_reference());
-    }
+  __host__ __device__ typename super_t::reference dereference() const
+  {
+    return Proxy<const OutputIterator, const UnaryFunction>(
+        fun, this->base_reference());
+  }
 };
-
 
 struct Multiplier
 {
-    template<typename Tuple>
-    __host__ __device__
-    auto operator()(Tuple t) const -> decltype(thrust::get<0>(t) * thrust::get<1>(t))
-    {
-        return thrust::get<0>(t) * thrust::get<1>(t);
-    }
+  template <typename Tuple>
+  __host__ __device__ auto operator()(Tuple t) const
+      -> decltype(thrust::get<0>(t) * thrust::get<1>(t))
+  {
+    return thrust::get<0>(t) * thrust::get<1>(t);
+  }
 };
 
-
 template <typename OutputIterator, typename UnaryFunction>
-transform_output_iterator<OutputIterator, UnaryFunction>
-__host__ __device__
+transform_output_iterator<OutputIterator, UnaryFunction> __host__ __device__
 make_transform_output_iterator(OutputIterator out, UnaryFunction fun)
 {
-    return transform_output_iterator<OutputIterator, UnaryFunction>(out, fun);
+  return transform_output_iterator<OutputIterator, UnaryFunction>(out, fun);
 }
 
 int main()
