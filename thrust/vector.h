@@ -48,7 +48,7 @@ template<typename T, typename Alloc> class host_vector;
  *  \see http://www.sgi.com/tech/stl/Vector.html
  *  \see host_vector
  */
-template<typename T, typename Alloc = thrust::device_malloc_allocator<T> >
+template<typename T, typename Alloc = thrust::managed_allocator<T> >
   class vector
     : public detail::vector_base<T,Alloc>
 {
@@ -137,14 +137,14 @@ template<typename T, typename Alloc = thrust::device_malloc_allocator<T> >
      */
     template<typename OtherT, typename OtherAlloc>
     __host__
-    vector(const host_vector<OtherT,OtherAlloc> &v);
+    vector(const host_vector<OtherT,OtherAlloc> &v) : Parent(v) {};
     
     /*! Copy constructor copies from an exemplar \p device_vector with possibly different type.
      *  \param v The \p device_vector to copy.
      */
     template<typename OtherT, typename OtherAlloc>
     __host__
-    vector(const device_vector<OtherT,OtherAlloc> &v);
+    vector(const device_vector<OtherT,OtherAlloc> &v) : Parent(v) {};
 
     /*! Assign operator copies from an examplar \p host_vector.
      *  \param v The \p host_vector to copy.
@@ -437,6 +437,5 @@ template<typename T, typename Alloc = thrust::device_malloc_allocator<T> >
 
 } // end thrust
 
-#include <thrust/detail/vector.inl>
 
 
